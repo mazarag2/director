@@ -25,3 +25,44 @@ pgClient.on("connect", (client) => {
       .catch((err) => console.error(err));
 });
 
+const redis = require('redis');
+
+const redisClient = redis.createClient({
+    host: keys.redisHost,
+    port: keys.redisPort,
+    retry_strategy: () => 1000
+});
+
+const redisPublisher = redisClient.duplicate();
+
+//refactor to DAO
+app.get('/values',async (request,res) => {
+    const values = await pgClient.query('SELECT * from values');
+    res.send(values.rows);
+});
+
+app.get('values/current',async(req,res) => {
+
+    redisClient.hgetall('values',(err,values) => {
+        res.send(values)
+    });
+
+});
+
+app.post('/values',async (req,res)=> {
+    const index = req.body.index
+    if(parseInt(index) >= 30){
+        res.send(422).send('Index too High');
+    }
+    redisClient.hset('values',index,'Nothing So Far');
+
+    redisPublisher.publish('insert',index);
+
+    pgClient.query('INSERT INTO values(number) VALUES($1),[index]')
+    res.send({working : true})
+
+});
+
+app.listen(5000, err => {
+    console.log('Listening');
+})
