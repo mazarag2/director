@@ -3,8 +3,8 @@
         "nodemon": "*",
         "redis": "2.8.0"
     },
-    "script":{
-        "start" : "node index.js",
-        "dev": "nodemon"
+    "script": {
+        "dev": "nodemon",
+        "start" : "node index.js"
     }
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-export default () => {
+const About = () => {
     return (
         <div>
             Sample Project for learning Multi continaer deployments with Docker and Kubernetes
@@ -10,3 +10,4 @@ export default () => {
 
     )
 }
+export default About

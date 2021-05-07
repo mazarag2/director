@@ -1,4 +1,4 @@
-import React,{ Component,useState,useEffect } from 'react';
+import React,{ useState,useEffect } from 'react';
 import axios from 'axios';
 
 const Fib = () => {
@@ -9,19 +9,7 @@ const Fib = () => {
     const API_ENDPOINT_CURRENT = '/api/values/current';
     const API_ENDPOINT_ALL = 'api/api/values';
 
-    const fetchValues = async() => {
-        const values = await axios.get(API_ENDPOINT_CURRENT);
-        updateValues(values.data);
 
-    }
-
-    const fetchIndexes = async() => {
-
-        const seenIndexes = await axios.get(API_ENDPOINT_ALL);
-        UpdateSeenIndexes(seenIndexes.data)
-
-
-    }
 
     const renderValues = () => {
         const entries = [];
@@ -45,10 +33,21 @@ const Fib = () => {
         updateIndexes('')
 
     }
-    useEffect(async () => {
-
-        await fetchValues();
-        await fetchIndexes();
+    useEffect( () => {
+        const fetchValues = async() => {
+            const values = await axios.get(API_ENDPOINT_CURRENT);
+            updateValues(values.data);
+    
+        }
+    
+        const fetchIndexes = async() => {
+    
+            const seenIndexes = await axios.get(API_ENDPOINT_ALL);
+            UpdateSeenIndexes(seenIndexes.data)
+    
+        }
+         fetchValues();
+         fetchIndexes();
 
     },[])
 
